@@ -3,7 +3,7 @@ import streamlit as st
 import numpy as np
 
 def load_data():
-	df = pd.read_csv("./data/db.csv")
+	df = pd.read_csv("./db.csv")
 	return df
 	
 def get_player_stat_by_champion(df, player):
