@@ -54,7 +54,7 @@ def same_team_win_percentage(df, p1, p2):
 
 
 df = load_data()
-st.sidebar.title('내전방 스탯 기록 20240413')
+st.sidebar.title('내전방 스탯 기록 20240415')
 st.sidebar.markdown("# 플레이어 랭킹")
 players = sorted(df.player.unique().tolist())
 positions = ['전체', '탑', '정글', '미드', '원딜', '서포터']
