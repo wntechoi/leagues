@@ -56,7 +56,8 @@ def same_team_win_percentage(df, p1, p2):
     data_p2 = df[(df['player'] == p2)]
     data = data_p1.merge(data_p2, on ='game_no', how='inner')
     data = data[data['team_x'] == data['team_y']]
-    return np.mean(data.win_x)
+    data['win_or_not_x'] = data.apply(lambda x: '승리' if x['win_x'] == 1 else '패배', axis=1)
+    return data
 
 
 df = load_data()
@@ -110,9 +111,27 @@ if st.sidebar.button('매치업 보기'):
 	col1, col2= st.columns(2)
 	with col1:
 	    st.header(f'{player1} 매치 기록')
-	
+    
 	with col2:
 	    st.header(f'{player2} 매치 기록')
 	data = data[['position_x', 'champion_x', 'kill_x', 'death_x', 'assist_x','cs_x','damage_dealt_x', 'sight_score_x', 'win_or_not_x','game_time_x', 'win_or_not_y', 'position_y', 'champion_y', 'kill_y', 'death_y', 'assist_y','cs_y','damage_dealt_y', 'sight_score_y']]
 	data.columns = [f'포지션_{player1}', f'챔피언_{player1}', f'킬_{player1}', f'데스_{player1}', f'어시스트_{player1}', f'cs_{player1}',f'딜량_{player1}', f'시야점수_{player1}', f'승리여부_{player1}','게임 시간',f'승리여부_{player2}',f'포지션_{player2}', f'챔피언_{player2}', f'킬_{player2}', f'데스_{player2}', f'어시스트_{player2}', f'cs_{player2}',f'딜량_{player2}', f'시야점수_{player2}']
+	st.table(data)
+
+st.sidebar.markdown("--------")
+st.sidebar.markdown("# 팀 궁합")
+p1 = st.sidebar.selectbox('플레이어 1: ', players)
+p2 = st.sidebar.selectbox('플레이어 2: ', players)
+if st.sidebar.button('팀 궁합 보기'):
+	data = same_team_win_percentage(df, p1, p2)
+	st.markdown(f"# {p1} + {p2}")
+	st.markdown(f"총 **{len(data)}번** 같은 팀을 해서 **{len(data[data['win_x']==1])}번** 이겨 **{np.mean(data.win_x) * 100}**%의 승률을 기록하고 있습니다")
+	col1, col2= st.columns(2)
+	with col1:
+	    st.header(f'{p1} 매치 기록')
+    
+	with col2:
+	    st.header(f'{p2} 매치 기록')
+	data = data[['win_or_not_x','position_x', 'champion_x', 'kill_x', 'death_x', 'assist_x','cs_x','damage_dealt_x', 'sight_score_x','game_time_x', 'position_y', 'champion_y', 'kill_y', 'death_y', 'assist_y','cs_y','damage_dealt_y', 'sight_score_y']]
+	data.columns = [f'승리여부',f'포지션_{p1}', f'챔피언_{p1}', f'킬_{p1}', f'데스_{p1}', f'어시스트_{p1}', f'cs_{p1}',f'딜량_{p1}', f'시야점수_{p1}', '게임 시간',f'포지션_{p2}', f'챔피언_{p2}', f'킬_{p2}', f'데스_{p2}', f'어시스트_{p2}', f'cs_{p2}',f'딜량_{p2}', f'시야점수_{p2}']
 	st.table(data)
