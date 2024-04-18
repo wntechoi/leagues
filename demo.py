@@ -42,10 +42,12 @@ def get_player_ranking(df, position=None, min_game=1):
 
 
 def get_player_matchup_df(df, p1, p2, position):
-    data_p1 = df[(df['player'] == p1) & (df['position']==position)]
-    data_p2 = df[(df['player'] == p2) & (df['position']==position)]
+    data_p1 = df[(df['player'] == p1) & (df['position']==position)] if position !='전체' else df[(df['player'] == p1)]
+    data_p2 = df[(df['player'] == p2) & (df['position']==position)] if position !='전체' else df[(df['player'] == p2)]
     data = data_p1.merge(data_p2, on ='game_no', how='inner')
     data = data[data['team_x'] != data['team_y']]
+    data['win_or_not_x'] = data.apply(lambda x: '승리' if x['win_x'] == 1 else '패배', axis=1)
+    data['win_or_not_y'] = data.apply(lambda x: '승리' if x['win_y'] == 1 else '패배', axis=1)
     return data
 
 
@@ -94,4 +96,23 @@ if st.sidebar.button('플레이어 스탯 보기'):
 	ascend = False if order_stat not in  ['챔피언', '평균 데스'] else True
 	data = data.sort_values(by=[order_stat], axis=0, ascending=ascend).reset_index(drop=True)
 	st.table(data)
+
+
+st.sidebar.markdown("--------")
+st.sidebar.markdown("# 매치업 비교")
+player1 = st.sidebar.selectbox('플레이어 1:', players)
+player2 = st.sidebar.selectbox('플레이어 2:', players)
+position = st.sidebar.selectbox('매치업 포지션:', positions)
+if st.sidebar.button('매치업 보기'):
+	data = get_player_matchup_df(df, player1, player2, position)
+	st.markdown(f"# {player1} vs {player2}")
+	st.markdown(f"|-|승률|-|\n|--|--|--|\n|{player1}|{np.mean(data.win_x)} : {np.mean(data.win_y)}|{player2}|\n|게임 횟수 | {len(data)} |- |")
+	col1, col2= st.columns(2)
+	with col1:
+	    st.header(f'{player1} 매치 기록')
 	
+	with col2:
+	    st.header(f'{player2} 매치 기록')
+	data = data[['position_x', 'champion_x', 'kill_x', 'death_x', 'assist_x','cs_x','damage_dealt_x', 'sight_score_x', 'win_or_not_x','game_time_x', 'win_or_not_y', 'position_y', 'champion_y', 'kill_y', 'death_y', 'assist_y','cs_y','damage_dealt_y', 'sight_score_y']]
+	data.columns = [f'포지션_{player1}', f'챔피언_{player1}', f'킬_{player1}', f'데스_{player1}', f'어시스트_{player1}', f'cs_{player1}',f'딜량_{player1}', f'시야점수_{player1}', f'승리여부_{player1}','게임 시간',f'승리여부_{player2}',f'포지션_{player2}', f'챔피언_{player2}', f'킬_{player2}', f'데스_{player2}', f'어시스트_{player2}', f'cs_{player2}',f'딜량_{player2}', f'시야점수_{player2}']
+	st.table(data)
