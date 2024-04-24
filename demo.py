@@ -25,7 +25,11 @@ def get_average_stat(data, by, min_game=1):
     df['kda'] = df.apply(lambda x : (x.kill + x.assist)/max(x.death,1), axis = 1)
     df.columns = [by_korean, '평균 킬', '평균 데스', '평균 어시스트', '평균 cs', '평균 분당 cs', '승률','평균 딜량', '평균 시야점수', '총 플레이 횟수', 'KDA']
     df = df[[by_korean, '평균 킬', '평균 데스', '평균 어시스트', '평균 cs', '평균 분당 cs','평균 딜량', '평균 시야점수', 'KDA', '승률', '총 플레이 횟수']]
-    return df
+    style = {}
+    for column in df.columns:
+        style[column] = "{:.2f}".format
+    formatted_df = df.style.format(style)
+    return formatted_df
 
 def get_player_stat(df, player, position=None, min_game=1):
     data = df[(df['player']== player) & (df['position']==position)] if position is not None else df[(df['player']== player)] 
@@ -116,7 +120,11 @@ if st.sidebar.button('매치업 보기'):
 	    st.header(f'{player2} 매치 기록')
 	data = data[['position_x', 'champion_x', 'kill_x', 'death_x', 'assist_x','cs_x','damage_dealt_x', 'sight_score_x', 'win_or_not_x','game_time_x', 'win_or_not_y', 'position_y', 'champion_y', 'kill_y', 'death_y', 'assist_y','cs_y','damage_dealt_y', 'sight_score_y']]
 	data.columns = [f'포지션_{player1}', f'챔피언_{player1}', f'킬_{player1}', f'데스_{player1}', f'어시스트_{player1}', f'cs_{player1}',f'딜량_{player1}', f'시야점수_{player1}', f'승리여부_{player1}','게임 시간',f'승리여부_{player2}',f'포지션_{player2}', f'챔피언_{player2}', f'킬_{player2}', f'데스_{player2}', f'어시스트_{player2}', f'cs_{player2}',f'딜량_{player2}', f'시야점수_{player2}']
-	st.table(data)
+	style = {}
+    	for column in data.columns:
+        	style[column] = "{:.2f}".format
+	formatted_df = data.style.format(style)
+	st.table(formatted_df)
 
 st.sidebar.markdown("--------")
 st.sidebar.markdown("# 팀 궁합")
@@ -134,4 +142,8 @@ if st.sidebar.button('팀 궁합 보기'):
 	    st.header(f'{p2} 매치 기록')
 	data = data[['win_or_not_x','position_x', 'champion_x', 'kill_x', 'death_x', 'assist_x','cs_x','damage_dealt_x', 'sight_score_x','game_time_x', 'position_y', 'champion_y', 'kill_y', 'death_y', 'assist_y','cs_y','damage_dealt_y', 'sight_score_y']]
 	data.columns = [f'승리여부',f'포지션_{p1}', f'챔피언_{p1}', f'킬_{p1}', f'데스_{p1}', f'어시스트_{p1}', f'cs_{p1}',f'딜량_{p1}', f'시야점수_{p1}', '게임 시간',f'포지션_{p2}', f'챔피언_{p2}', f'킬_{p2}', f'데스_{p2}', f'어시스트_{p2}', f'cs_{p2}',f'딜량_{p2}', f'시야점수_{p2}']
-	st.table(data)
+	style = {}
+    	for column in data.columns:
+        	style[column] = "{:.2f}".format
+	formatted_df = data.style.format(style)
+	st.table(formatted_df)
