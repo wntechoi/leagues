@@ -25,11 +25,7 @@ def get_average_stat(data, by, min_game=1):
     df['kda'] = df.apply(lambda x : (x.kill + x.assist)/max(x.death,1), axis = 1)
     df.columns = [by_korean, '평균 킬', '평균 데스', '평균 어시스트', '평균 cs', '평균 분당 cs', '승률','평균 딜량', '평균 시야점수', '총 플레이 횟수', 'KDA']
     df = df[[by_korean, '평균 킬', '평균 데스', '평균 어시스트', '평균 cs', '평균 분당 cs','평균 딜량', '평균 시야점수', 'KDA', '승률', '총 플레이 횟수']]
-    style = {}
-    for column in df.columns:
-        style[column] = "{:.2f}".format
-    formatted_df = df.style.format(style)
-    return formatted_df
+    return df
 
 def get_player_stat(df, player, position=None, min_game=1):
     data = df[(df['player']== player) & (df['position']==position)] if position is not None else df[(df['player']== player)] 
@@ -81,7 +77,11 @@ if st.sidebar.button('플레이어 랭킹 보기'):
 	
 	ascend = False if order not in  ['플레이어', '평균 데스'] else True
 	data = data.sort_values(by=[order], axis=0, ascending=ascend).reset_index(drop=True)
-	st.table(data)
+	style = {}
+	for column in data.columns:
+	    style[column] = "{:.2f}".format
+	formatted_df = data.style.format(style)
+	st.table(formatted_df)
 
 
 st.sidebar.markdown("--------")
@@ -100,7 +100,11 @@ if st.sidebar.button('플레이어 스탯 보기'):
 	
 	ascend = False if order_stat not in  ['챔피언', '평균 데스'] else True
 	data = data.sort_values(by=[order_stat], axis=0, ascending=ascend).reset_index(drop=True)
-	st.table(data)
+	style = {}
+	for column in data.columns:
+	    style[column] = "{:.2f}".format
+	formatted_df = data.style.format(style)
+	st.table(formatted_df)
 
 
 st.sidebar.markdown("--------")
