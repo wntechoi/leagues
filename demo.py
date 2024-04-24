@@ -143,7 +143,7 @@ if st.sidebar.button('팀 궁합 보기'):
 	data = data[['win_or_not_x','position_x', 'champion_x', 'kill_x', 'death_x', 'assist_x','cs_x','damage_dealt_x', 'sight_score_x','game_time_x', 'position_y', 'champion_y', 'kill_y', 'death_y', 'assist_y','cs_y','damage_dealt_y', 'sight_score_y']]
 	data.columns = [f'승리여부',f'포지션_{p1}', f'챔피언_{p1}', f'킬_{p1}', f'데스_{p1}', f'어시스트_{p1}', f'cs_{p1}',f'딜량_{p1}', f'시야점수_{p1}', '게임 시간',f'포지션_{p2}', f'챔피언_{p2}', f'킬_{p2}', f'데스_{p2}', f'어시스트_{p2}', f'cs_{p2}',f'딜량_{p2}', f'시야점수_{p2}']
 	style = {}
-    	for column in data.columns:
-            style[column] = "{:.2f}".format
+	for column in data.columns:
+	    style[column] = "{:.2f}".format
 	formatted_df = data.style.format(style)
 	st.table(formatted_df)
