@@ -4,6 +4,7 @@ import numpy as np
 
 def load_data():
 	df = pd.read_csv("./db.csv")
+	df['month'] = df.apply(lambda x: x['date'].split(".")[1] + '월', axis = 1)
 	return df
 	
 def convert_into_minute(game_time):
@@ -27,16 +28,19 @@ def get_average_stat(data, by, min_game=1):
     df = df[[by_korean, '평균 킬', '평균 데스', '평균 어시스트', '평균 cs', '평균 분당 cs','평균 딜량', '평균 시야점수', 'KDA', '승률', '총 플레이 횟수']]
     return df
 
-def get_player_stat(df, player, position=None, min_game=1):
-    data = df[(df['player']== player) & (df['position']==position)] if position is not None else df[(df['player']== player)] 
+def get_player_stat(df, player, position=None, min_game=1, month = '전체'):
+    data = df if month == '전체' else df[df['month'] == month]
+    data = data[(data['player']== player) & (data['position']==position)] if position is not None else data[(data['player']== player)] 
     
     stat = get_average_stat(data, by='champion', min_game=min_game)
     
     return stat
 
 
-def get_player_ranking(df, position=None, min_game=1):
-    data = df[(df['position']==position)] if position is not None else df
+def get_player_ranking(df, position=None, min_game=1, month='전체'):
+    data = df if month == '전체' else df[df['month'] == month]
+    data = data[(data['position']==position)] if position is not None else data
+	
     data = get_average_stat(data, by='player', min_game=min_game)
     return data
 
@@ -61,19 +65,72 @@ def same_team_win_percentage(df, p1, p2):
 
 
 df = load_data()
-st.sidebar.title('내전방 스탯 기록 (20240425 22시 업데이트)')
-
-st.sidebar.markdown("# 플레이어 랭킹")
+months = ['전체']+df.month.unique().tolist()
 players = sorted(df.player.unique().tolist())
 positions = ['전체', '탑', '정글', '미드', '원딜', '서포터']
 orders = ['플레이어', '평균 킬', '평균 데스', '평균 어시스트', '평균 cs','평균 분당 cs','평균 딜량', '평균 시야점수','KDA', '승률', '총 플레이 횟수']
+
+st.sidebar.title('내전방 스탯 기록 (20240425 22시 업데이트)')
+st.sidebar.markdown("# Team of The Month")
+month_totm = st.sidebar.selectbox('T.O.T.M 월 선택:', months)
+if st.sidebar.button('T.O.T.M 보기'):
+	st.write('T.O.T.M 보기')
+	for pos in ['탑', '정글', '미드', '원딜', '서포터']:
+		player_score = {player: 0 for player in players}
+		data = get_player_ranking(df, pos, min_game=4, month=month_totm)
+		sorted_data = data.sort_values(by=['KDA', '총 플레이 횟수'], axis=0, ascending=False).reset_index()
+		sorted_data.index = sorted_data.index.astype(int)
+		for player in players:
+			if player in sorted_data['플레이어'].tolist():
+				player_score[player] += (100 - sorted_data[sorted_data['플레이어']==player].index.tolist()[0]) * 0.4
+		
+		sorted_data = data.sort_values(by=['승률', '총 플레이 횟수'], axis=0, ascending=False).reset_index()
+		sorted_data.index = sorted_data.index.astype(int)
+		for player in players:
+			if player in sorted_data['플레이어'].tolist():
+				player_score[player] += (100-sorted_data[sorted_data['플레이어']==player].index.tolist()[0]) * 0.7
+			
+		sorted_data = data.sort_values(by=['총 플레이 횟수', '총 플레이 횟수'], axis=0, ascending=False).reset_index()
+		sorted_data.index = sorted_data.index.astype(int)
+		for player in players:
+			if player in sorted_data['플레이어'].tolist():
+				player_score[player] += (100-sorted_data[sorted_data['플레이어']==player].index.tolist()[0]) * 0.1
+
+		sorted_data = data.sort_values(by=['평균 딜량', '총 플레이 횟수'], axis=0, ascending=False).reset_index()
+		sorted_data.index = sorted_data.index.astype(int)
+		for player in players:
+			if player in sorted_data['플레이어'].tolist():
+				player_score[player] += (100-sorted_data[sorted_data['플레이어']==player].index.tolist()[0]) * 0.5
+
+		sorted_data = data.sort_values(by=['평균 분당 cs', '총 플레이 횟수'], axis=0, ascending=False).reset_index()
+		sorted_data.index = sorted_data.index.astype(int)
+		for player in players:
+			if player in sorted_data['플레이어'].tolist():
+				player_score[player] += (100-sorted_data[sorted_data['플레이어']==player].index.tolist()[0]) * 0.5
+		
+		
+		sorted_data = data.sort_values(by=['평균 시야점수', '총 플레이 횟수'], axis=0, ascending=False).reset_index()
+		for player in players:
+			if player in sorted_data['플레이어'].tolist():
+				if pos == '서포터':
+					player_score[player] += (100-sorted_data[sorted_data['플레이어']==player].index.tolist()[0]) * 0.5
+				else:
+					player_score[player] += (100-sorted_data[sorted_data['플레이어']==player].index.tolist()[0]) * 0.2
+		st.write(pos)
+		st.write(list(dict(sorted(player_score.items(), key = lambda x: x[1], reverse=True)).keys())[:3])
+	
+st.sidebar.markdown("-----")
+st.sidebar.markdown("# 플레이어 랭킹")
+
+
 position = st.sidebar.selectbox('포지션:', positions)
 order = st.sidebar.selectbox('랭킹 정렬 순:', orders)
 min_game = st.sidebar.slider('최소 게임 수', min_value=1, max_value=max(df.game_no) + 1, value=1, step=1)
+month_rank = st.sidebar.selectbox('월 선택:', months)
 if st.sidebar.button('플레이어 랭킹 보기'):
-	st.title(f"{position} 랭킹")
-	st.write(f"{order} 순")
-	data = get_player_ranking(df, min_game=min_game) if position == '전체' else get_player_ranking(df, position, min_game=min_game)
+	st.title(f"{position} 포지션 랭킹 ({month_rank})")
+	st.write(f"정렬: {order} 순")
+	data = get_player_ranking(df, min_game=min_game, month=month_rank) if position == '전체' else get_player_ranking(df, position, min_game=min_game, month=month_rank)
 	
 	ascend = False if order not in  ['플레이어', '평균 데스'] else True
 	data = data.sort_values(by=[order], axis=0, ascending=ascend).reset_index(drop=True)
@@ -91,12 +148,12 @@ position_stat = st.sidebar.selectbox('포지션 선택:', positions)
 orders_stat = ['챔피언', '평균 킬', '평균 데스', '평균 어시스트', '평균 cs','평균 분당 cs','평균 딜량', '평균 시야점수','KDA', '승률', '총 플레이 횟수']
 order_stat = st.sidebar.selectbox('스탯 정렬 순:', orders_stat)
 min_game_stat = st.sidebar.slider('최소 게임 수 ', min_value=1, max_value=max(df.game_no) + 1, value=1, step=1)
-
-if st.sidebar.button('플레이어 스탯 보기'):
+month_stat = st.sidebar.selectbox('월 선택: ', months)
+if st.sidebar.button(f'플레이어 스탯 보기 ({month_rank})'):
 	st.title(f"{player_stat} {position_stat} 스탯")
-	st.write(f"{order_stat} 순")
+	st.write(f"정렬: {order_stat} 순")
 	
-	data = get_player_stat(df, player_stat, min_game=min_game_stat) if position_stat == '전체' else get_player_stat(df, player_stat, position_stat, min_game=min_game_stat)
+	data = get_player_stat(df, player_stat, min_game=min_game_stat, month=month_stat) if position_stat == '전체' else get_player_stat(df, player_stat, position_stat, min_game=min_game_stat, month=month_stat)
 	
 	ascend = False if order_stat not in  ['챔피언', '평균 데스'] else True
 	data = data.sort_values(by=[order_stat], axis=0, ascending=ascend).reset_index(drop=True)
