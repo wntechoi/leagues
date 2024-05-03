@@ -24,9 +24,11 @@ with st.form('내전등록'):
 	df_wait = pd.read_csv("./db_wait.csv")
 	sorted_df_wait = df_wait.sort_values(by = ['date', 'game_no'], ascending=False).reset_index(drop=True)
 	st.markdown(f"등록 대기중인 내전 {len(df_wait.date.unique().tolist())}건")
-	
+
+	game_no = last_match
 	if df_wait.date.unique().tolist():
 		last_match_wait = sorted_df_wait['game_no'][0]
+		game_no =last_match_wait
 		last_date_wait = sorted_df_wait['date'][0]
 		t1_wait = sorted_df_wait[(sorted_df_wait['game_no'] == last_match_wait) & (sorted_df_wait['team'] == 1)].player.tolist()
 		t2_wait = sorted_df_wait[(sorted_df_wait['game_no'] == last_match_wait) & (sorted_df_wait['team'] == 0)].player.tolist()
@@ -40,7 +42,7 @@ with st.form('내전등록'):
 	game_date = st.text_input("경기 날짜 등록 (xxxx.xx.xx 형태)")
 	game_date_ls = [game_date] * 10
 	win_team = st.text_input("승리팀 (1팀 or 2팀)")
-	last_match_ls = [last_match_wait + 1]*10
+	last_match_ls = [game_no + 1]*10
 	if win_team == 1:
 		win_team_ls = [1,1,1,1,1,0,0,0,0,0]
 	else:
