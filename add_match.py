@@ -40,7 +40,7 @@ with st.form('내전등록'):
 	game_date = st.text_input("경기 날짜 등록 (xxxx.xx.xx 형태)")
 	game_date_ls = [game_date] * 10
 	win_team = st.text_input("승리팀 (1팀 or 2팀)")
-	last_match_ls = [last_match + 1]*10
+	last_match_ls = [last_match_wait + 1]*10
 	if win_team == 1:
 		win_team_ls = [1,1,1,1,1,0,0,0,0,0]
 	else:
