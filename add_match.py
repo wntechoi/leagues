@@ -38,6 +38,7 @@ with st.form('내전등록'):
 		
 	st.markdown("------")
 	st.markdown("# 신규 내전 등록")
+	st.write("등록 대기중인 내전이랑 안 겹치게 등록")
 	team_ls = [0,0,0,0,0,1,1,1,1,1]
 	game_date = st.text_input("경기 날짜 등록 (xxxx.xx.xx 형태)")
 	game_date_ls = [game_date] * 10
