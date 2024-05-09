@@ -158,7 +158,7 @@ with st.form('내전등록'):
 	players = [t1p1, t1p2, t1p3, t1p4, t1p5, t2p1, t2p2, t2p3, t2p4, t2p5]
 	positions = [t1p1_pos, t1p2_pos, t1p3_pos, t1p4_pos, t1p5_pos, t2p1_pos, t2p2_pos, t2p3_pos, t2p4_pos, t2p5_pos]
 	champions = [t1p1_champ, t1p2_champ, t1p3_champ, t1p4_champ, t1p5_champ, t2p1_champ, t2p2_champ, t2p3_champ, t2p4_champ, t2p5_champ]
-	kills = [t1p1_kill, t1p2_kill, t1p3, t1p4_kill, t1p5, t2p1_kill, t2p2_kill, t2p3_kill, t2p4_kill, t2p5_kill]
+	kills = [t1p1_kill, t1p2_kill, t1p3_kill, t1p4_kill, t1p5_kill, t2p1_kill, t2p2_kill, t2p3_kill, t2p4_kill, t2p5_kill]
 	deaths= [t1p1_death, t1p2_death, t1p3_death, t1p4_death, t1p5_death, t2p1_death, t2p2_death, t2p3_death, t2p4_death, t2p5_death]
 	assists= [t1p1_assist, t1p2_assist, t1p3_assist, t1p4_assist, t1p5_assist, t2p1_assist, t2p2_assist, t2p3_assist, t2p4_assist, t2p5_assist]
 	cs= [t1p1_cs, t1p2_cs, t1p3_cs, t1p4_cs, t1p5_cs, t2p1_cs, t2p2_cs, t2p3_cs, t2p4_cs, t2p5_cs]
