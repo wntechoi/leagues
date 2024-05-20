@@ -149,7 +149,7 @@ orders_stat = ['챔피언', '평균 킬', '평균 데스', '평균 어시스트'
 order_stat = st.sidebar.selectbox('스탯 정렬 순:', orders_stat)
 min_game_stat = st.sidebar.slider('최소 게임 수 ', min_value=1, max_value=max(df.game_no) + 1, value=1, step=1)
 month_stat = st.sidebar.selectbox('월 선택: ', months)
-if st.sidebar.button(f'플레이어 스탯 보기 ({month_rank})'):
+if st.sidebar.button(f'플레이어 스탯 보기'):
 	st.title(f"{player_stat} {position_stat} 스탯")
 	st.write(f"정렬: {order_stat} 순")
 	
