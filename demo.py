@@ -38,6 +38,13 @@ def get_player_stat(df, player, position=None, min_game=1, month = '전체'):
     
     return stat
 
+def get_champion_stat(df, position=None, min_game=1, month = '전체'):
+    data = df if month == '전체' else df[df['month'] == month]
+    data = data[(data['position']==position)] if position is not None else data
+    
+    stat = get_average_stat(data, by='champion', min_game=min_game)
+    
+    return stat
 
 def get_player_ranking(df, position=None, min_game=1, month='전체'):
     data = df if month == '전체' else df[df['month'] == month]
@@ -136,6 +143,28 @@ if st.sidebar.button('플레이어 랭킹 보기'):
 	data = data[data['플레이어'].isin(players)]
 	ascend = False if order not in  ['플레이어', '평균 데스'] else True
 	data = data.sort_values(by=[order], axis=0, ascending=ascend).reset_index(drop=True)
+	style = {}
+	for column in data.select_dtypes(include=['float']).columns:
+	    style[column] = "{:.2f}".format
+	formatted_df = data.style.format(style)
+	st.table(formatted_df)
+
+
+st.sidebar.markdown("-----")
+st.sidebar.markdown("# 포지션별 챔피언 스탯")
+
+position_champ = st.sidebar.selectbox('포지션:  ', positions)
+order_champ = st.sidebar.selectbox('랭킹 정렬 순:  ', orders)
+min_game_champ = st.sidebar.slider('최소 게임 수:  ', min_value=1, max_value=max(df.game_no) + 1, value=1, step=1)
+month_champ = st.sidebar.selectbox('월 선택:  ', months)
+
+if st.sidebar.button('플레이어 랭킹 보기'):
+	st.title(f"{position} 챔피언 랭킹 ({month_rank})")
+	st.write(f"정렬: {order_champ} 순")
+	data = get_champion_stat(df, min_game=min_game_champ, month=month_champ) if position_champ == '전체' else get_champion_stat(df,  position_champ, min_game=min_game_champ, month=month_champ)
+	
+	ascend = False if order_champ not in  ['챔피언', '평균 데스'] else True
+	data = data.sort_values(by=[order_champ], axis=0, ascending=ascend).reset_index(drop=True)
 	style = {}
 	for column in data.select_dtypes(include=['float']).columns:
 	    style[column] = "{:.2f}".format
