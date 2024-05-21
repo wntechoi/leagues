@@ -133,7 +133,7 @@ st.sidebar.markdown("# 플레이어 랭킹")
 
 
 position = st.sidebar.selectbox('포지션:', positions)
-order = st.sidebar.selectbox('랭킹 정렬 순:', ['챔피언', '평균 킬', '평균 데스', '평균 어시스트', '평균 cs','평균 분당 cs','평균 분당 딜량', '평균 분당 시야점수','KDA', '승률', '총 플레이 횟수'])
+order = st.sidebar.selectbox('랭킹 정렬 순:', orders)
 min_game = st.sidebar.slider('최소 게임 수', min_value=1, max_value=max(df.game_no) + 1, value=1, step=1)
 month_rank = st.sidebar.selectbox('월 선택:', months)
 if st.sidebar.button('플레이어 랭킹 보기'):
@@ -154,7 +154,7 @@ st.sidebar.markdown("-----")
 st.sidebar.markdown("# 포지션별 챔피언 스탯")
 
 position_champ = st.sidebar.selectbox('포지션:  ', positions)
-order_champ = st.sidebar.selectbox('랭킹 정렬 순:  ', orders)
+order_champ = st.sidebar.selectbox('랭킹 정렬 순:  ', ['챔피언', '평균 킬', '평균 데스', '평균 어시스트', '평균 cs','평균 분당 cs','평균 분당 딜량', '평균 분당 시야점수','KDA', '승률', '총 플레이 횟수'])
 min_game_champ = st.sidebar.slider('최소 게임 수:  ', min_value=1, max_value=max(df.game_no) + 1, value=1, step=1)
 month_champ = st.sidebar.selectbox('월 선택:  ', months)
 
