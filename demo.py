@@ -158,7 +158,7 @@ order_champ = st.sidebar.selectbox('랭킹 정렬 순:  ', orders)
 min_game_champ = st.sidebar.slider('최소 게임 수:  ', min_value=1, max_value=max(df.game_no) + 1, value=1, step=1)
 month_champ = st.sidebar.selectbox('월 선택:  ', months)
 
-if st.sidebar.button('플레이어 랭킹 보기'):
+if st.sidebar.button('포지션별 챔피언 스탯 보기'):
 	st.title(f"{position} 챔피언 랭킹 ({month_rank})")
 	st.write(f"정렬: {order_champ} 순")
 	data = get_champion_stat(df, min_game=min_game_champ, month=month_champ) if position_champ == '전체' else get_champion_stat(df,  position_champ, min_game=min_game_champ, month=month_champ)
