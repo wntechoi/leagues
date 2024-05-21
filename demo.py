@@ -80,7 +80,7 @@ if st.sidebar.button('T.O.T.M 보기'):
 	for pos in ['탑', '정글', '미드', '원딜', '서포터']:
 		player_score = {player: 0 for player in players}
 		data = get_player_ranking(df, pos, min_game=4, month=month_totm)
-		sorted_data = data.sort_values(by=['KDA', '총 플레이 횟수'], axis=0, ascending=False).reset_index(drop=True)
+		sorted_data = data.sort_values(by=['KDA', '총 플레이 횟수'], axis=0, ascending=False).reset_index()
 		sorted_data.index = sorted_data.index.astype(int)
 		for player in players:
 			if player in sorted_data['플레이어'].tolist():
@@ -92,26 +92,26 @@ if st.sidebar.button('T.O.T.M 보기'):
 			if player in sorted_data['플레이어'].tolist():
 				player_score[player] += (100-sorted_data[sorted_data['플레이어']==player].index.tolist()[0]) * 0.7
 			
-		sorted_data = data.sort_values(by=['총 플레이 횟수', '총 플레이 횟수'], axis=0, ascending=False).reset_index(drop=True)
+		sorted_data = data.sort_values(by=['총 플레이 횟수', '총 플레이 횟수'], axis=0, ascending=False).reset_index()
 		sorted_data.index = sorted_data.index.astype(int)
 		for player in players:
 			if player in sorted_data['플레이어'].tolist():
 				player_score[player] += (100-sorted_data[sorted_data['플레이어']==player].index.tolist()[0]) * 0.1
 
-		sorted_data = data.sort_values(by=['평균 딜량', '총 플레이 횟수'], axis=0, ascending=False).reset_index(drop=True)
+		sorted_data = data.sort_values(by=['평균 딜량', '총 플레이 횟수'], axis=0, ascending=False).reset_index()
 		sorted_data.index = sorted_data.index.astype(int)
 		for player in players:
 			if player in sorted_data['플레이어'].tolist():
 				player_score[player] += (100-sorted_data[sorted_data['플레이어']==player].index.tolist()[0]) * 0.5
 
-		sorted_data = data.sort_values(by=['평균 분당 cs', '총 플레이 횟수'], axis=0, ascending=False).reset_index(drop=True)
+		sorted_data = data.sort_values(by=['평균 분당 cs', '총 플레이 횟수'], axis=0, ascending=False).reset_index()
 		sorted_data.index = sorted_data.index.astype(int)
 		for player in players:
 			if player in sorted_data['플레이어'].tolist():
 				player_score[player] += (100-sorted_data[sorted_data['플레이어']==player].index.tolist()[0]) * 0.5
 		
 		
-		sorted_data = data.sort_values(by=['평균 분당 시야점수', '총 플레이 횟수'], axis=0, ascending=False).reset_index(drop=True)
+		sorted_data = data.sort_values(by=['평균 분당 시야점수', '총 플레이 횟수'], axis=0, ascending=False).reset_index()
 		for player in players:
 			if player in sorted_data['플레이어'].tolist():
 				if pos == '서포터':
