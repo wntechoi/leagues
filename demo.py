@@ -16,16 +16,18 @@ def convert_into_minute(game_time):
 def get_average_stat(data, by, min_game=1):
     by_korean = '챔피언' if by == 'champion' else '플레이어'
     data['cs_per_min'] = data.apply(lambda x : x['cs'] / convert_into_minute(x.game_time), axis = 1)
+    data['damage_dealt_per_min'] = data.apply(lambda x : x['damage_dealt'] / convert_into_minute(x.game_time), axis = 1)
+    data['sight_score_per_min'] = data.apply(lambda x : x['sight_score'] / convert_into_minute(x.game_time), axis = 1)
 	
-    df = data[[by,'kill','death','assist', 'cs', 'cs_per_min','win', 'damage_dealt', 'sight_score']].groupby(by).mean().reset_index()
+    df = data[[by,'kill','death','assist', 'cs', 'cs_per_min','win', 'damage_dealt_per_min', 'sight_score_per_min']].groupby(by).mean().reset_index()
 	
     game_played = data[[by,'game_no']].groupby(by).count().reset_index()
     df = df.merge(game_played, on=by,how='inner')
     df = df[df['game_no']>=min_game]
 	
     df['kda'] = df.apply(lambda x : (x.kill + x.assist)/max(x.death,1), axis = 1)
-    df.columns = [by_korean, '평균 킬', '평균 데스', '평균 어시스트', '평균 cs', '평균 분당 cs', '승률','평균 딜량', '평균 시야점수', '총 플레이 횟수', 'KDA']
-    df = df[[by_korean, '평균 킬', '평균 데스', '평균 어시스트', '평균 cs', '평균 분당 cs','평균 딜량', '평균 시야점수', 'KDA', '승률', '총 플레이 횟수']]
+    df.columns = [by_korean, '평균 킬', '평균 데스', '평균 어시스트', '평균 cs', '평균 분당 cs', '승률','평균 분당 딜량', '평균 분당 시야점수', '총 플레이 횟수', 'KDA']
+    df = df[[by_korean, '평균 킬', '평균 데스', '평균 어시스트', '평균 cs', '평균 분당 cs','평균 분당 딜량', '평균 분당 시야점수', 'KDA', '승률', '총 플레이 횟수']]
     return df
 
 def get_player_stat(df, player, position=None, min_game=1, month = '전체'):
@@ -68,7 +70,7 @@ df = load_data()
 months = ['전체']+df.month.unique().tolist()
 players = sorted(['강윤모', '김대현', '이건주', '이상훈','고지성', '송기완','김성원', '김예솔', '김윤후', '박은규', '김시은', '유지훈', '이동현', '이유림', '이상현', '이준혁', '장채린', '황지나', '최원태', '한경훈'])
 positions = ['전체', '탑', '정글', '미드', '원딜', '서포터']
-orders = ['플레이어', '평균 킬', '평균 데스', '평균 어시스트', '평균 cs','평균 분당 cs','평균 딜량', '평균 시야점수','KDA', '승률', '총 플레이 횟수']
+orders = ['플레이어', '평균 킬', '평균 데스', '평균 어시스트', '평균 cs','평균 분당 cs','평균 분당 딜량', '평균 분당 시야점수','KDA', '승률', '총 플레이 횟수']
 
 st.sidebar.title('내전방 스탯 기록 (20240521 21시 업데이트)')
 st.sidebar.markdown("# Team of The Month")
