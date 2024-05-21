@@ -115,7 +115,7 @@ if st.sidebar.button('T.O.T.M 보기'):
 		for player in players:
 			if player in sorted_data['플레이어'].tolist():
 				if pos == '서포터':
-					player_score[player] += (100-sorted_data[sorted_data['플레이어']==player].index.tolist()[0]) * 0.5
+					player_score[player] += (100-sorted_data[sorted_data['플레이어']==player].index.tolist()[0]) * 0.7
 				else:
 					player_score[player] += (100-sorted_data[sorted_data['플레이어']==player].index.tolist()[0]) * 0.1
 		st.write(pos)
