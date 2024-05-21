@@ -70,7 +70,7 @@ players = sorted(['강윤모', '김대현', '이건주', '이상훈','고지성'
 positions = ['전체', '탑', '정글', '미드', '원딜', '서포터']
 orders = ['플레이어', '평균 킬', '평균 데스', '평균 어시스트', '평균 cs','평균 분당 cs','평균 딜량', '평균 시야점수','KDA', '승률', '총 플레이 횟수']
 
-st.sidebar.title('내전방 스탯 기록 (20240501 21시 업데이트)')
+st.sidebar.title('내전방 스탯 기록 (20240521 21시 업데이트)')
 st.sidebar.markdown("# Team of The Month")
 month_totm = st.sidebar.selectbox('T.O.T.M 월 선택:', months)
 if st.sidebar.button('T.O.T.M 보기'):
@@ -131,7 +131,7 @@ if st.sidebar.button('플레이어 랭킹 보기'):
 	st.title(f"{position} 포지션 랭킹 ({month_rank})")
 	st.write(f"정렬: {order} 순")
 	data = get_player_ranking(df, min_game=min_game, month=month_rank) if position == '전체' else get_player_ranking(df, position, min_game=min_game, month=month_rank)
-	
+	data = data[data['플레이어'].isin(players)]
 	ascend = False if order not in  ['플레이어', '평균 데스'] else True
 	data = data.sort_values(by=[order], axis=0, ascending=ascend).reset_index(drop=True)
 	style = {}
