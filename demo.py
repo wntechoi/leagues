@@ -1,6 +1,7 @@
 import pandas as pd
 import streamlit as st
 import numpy as np
+import math
 
 def load_data():
 	df = pd.read_csv("./db.csv")
@@ -85,46 +86,43 @@ month_totm = st.sidebar.selectbox('T.O.T.M 월 선택:', months)
 if st.sidebar.button('T.O.T.M 보기'):
 	st.write('T.O.T.M 보기')
 	for pos in ['탑', '정글', '미드', '원딜', '서포터']:
-		player_score = {player: 0 for player in players}
+		player_score = {player: 1 for player in players}
 		data = get_player_ranking(df, pos, min_game=5, month=month_totm)
 		sorted_data = data.sort_values(by=['KDA', '총 플레이 횟수'], axis=0, ascending=False).reset_index()
 		sorted_data.index = sorted_data.index.astype(int)
 		for player in players:
 			if player in sorted_data['플레이어'].tolist():
-				player_score[player] += (100 - sorted_data[sorted_data['플레이어']==player].index.tolist()[0]) * 0.6
+				player_score[player] *= (sorted_data[sorted_data['플레이어']==player]['kda'].tolist()[0]) 
 		
 		sorted_data = data.sort_values(by=['승률', '총 플레이 횟수'], axis=0, ascending=False).reset_index(drop=True)
 		sorted_data.index = sorted_data.index.astype(int)
 		for player in players:
 			if player in sorted_data['플레이어'].tolist():
-				player_score[player] += (100-sorted_data[sorted_data['플레이어']==player].index.tolist()[0]) * 0.7
+				player_score[player] *= (sorted_data[sorted_data['플레이어']==player]['승률'].tolist()[0])
 			
 		sorted_data = data.sort_values(by=['총 플레이 횟수', '총 플레이 횟수'], axis=0, ascending=False).reset_index()
 		sorted_data.index = sorted_data.index.astype(int)
 		for player in players:
 			if player in sorted_data['플레이어'].tolist():
-				player_score[player] += (100-sorted_data[sorted_data['플레이어']==player].index.tolist()[0]) * 0.1
+				player_score[player] *= math.log(sorted_data[sorted_data['플레이어']==player]['총 플레이 횟수'].tolist()[0])
 
 		sorted_data = data.sort_values(by=['평균 분당 딜량', '총 플레이 횟수'], axis=0, ascending=False).reset_index()
 		sorted_data.index = sorted_data.index.astype(int)
 		for player in players:
 			if player in sorted_data['플레이어'].tolist():
-				player_score[player] += (100-sorted_data[sorted_data['플레이어']==player].index.tolist()[0]) * 0.7
+				player_score[player] *= (sorted_data[sorted_data['플레이어']==player]['평균 분당 딜량'].tolist()[0])
 
 		sorted_data = data.sort_values(by=['평균 분당 cs', '총 플레이 횟수'], axis=0, ascending=False).reset_index()
 		sorted_data.index = sorted_data.index.astype(int)
 		for player in players:
 			if player in sorted_data['플레이어'].tolist():
-				player_score[player] += (100-sorted_data[sorted_data['플레이어']==player].index.tolist()[0]) * 0.7
+				player_score[player] *= (sorted_data[sorted_data['플레이어']==player]['평균 분당 cs'].tolist()[0])
 		
 		
 		sorted_data = data.sort_values(by=['평균 분당 시야점수', '총 플레이 횟수'], axis=0, ascending=False).reset_index()
 		for player in players:
 			if player in sorted_data['플레이어'].tolist():
-				if pos == '서포터':
-					player_score[player] += (100-sorted_data[sorted_data['플레이어']==player].index.tolist()[0]) * 0.7
-				else:
-					player_score[player] += (100-sorted_data[sorted_data['플레이어']==player].index.tolist()[0]) * 0.1
+				player_score[player] *= (sorted_data[sorted_data['플레이어']==player]['평균 분당 시야점수'].tolist()[0])
 		st.write(pos)
 		st.write(list(dict(sorted(player_score.items(), key = lambda x: x[1], reverse=True)).keys())[:3])
 	
