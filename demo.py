@@ -92,7 +92,7 @@ if st.sidebar.button('T.O.T.M 보기'):
 		sorted_data.index = sorted_data.index.astype(int)
 		for player in players:
 			if player in sorted_data['플레이어'].tolist():
-				player_score[player] *= (sorted_data[sorted_data['플레이어']==player]['kda'].tolist()[0]) 
+				player_score[player] *= (sorted_data[sorted_data['플레이어']==player]['KDA'].tolist()[0]) 
 		
 		sorted_data = data.sort_values(by=['승률', '총 플레이 횟수'], axis=0, ascending=False).reset_index(drop=True)
 		sorted_data.index = sorted_data.index.astype(int)
