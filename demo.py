@@ -124,7 +124,7 @@ if st.sidebar.button('T.O.T.M 보기'):
 			if player in sorted_data['플레이어'].tolist():
 				player_score[player] *= (sorted_data[sorted_data['플레이어']==player]['평균 분당 시야점수'].tolist()[0])
 		st.write(pos)
-		st.write(list(dict(sorted(player_score.items(), key = lambda x: x[1], reverse=True)).keys())[:3])
+		st.write(list(dict(sorted(player_score.items(), key = lambda x: x[1], reverse=True)))[:3])
 	
 st.sidebar.markdown("-----")
 st.sidebar.markdown("# 플레이어 랭킹")
