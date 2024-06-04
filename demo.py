@@ -76,11 +76,11 @@ def same_team_win_percentage(df, p1, p2):
 
 df = load_data()
 months = ['전체']+df.month.unique().tolist()
-players = sorted(['강윤모', '김대현', '이건주', '이상훈','고지성', '송기완','김성원', '김예솔', '김윤후', '박은규', '김시은', '유지훈', '이동현', '이유림', '이상현', '이준혁', '장채린', '황지나', '최원태', '한경훈'])
+players = sorted(['강윤모', '김대현', '남재희' '이건주', '이상훈','고지성', '송기완','김성원', '김예솔', '김윤후', '박은규', '김시은', '유지훈', '이동현', '이유림', '이상현', '이준혁', '장채린', '황지나', '최원태', '한경훈'])
 positions = ['전체', '탑', '정글', '미드', '원딜', '서포터']
 orders = ['플레이어', '평균 킬', '평균 데스', '평균 어시스트', '평균 cs','평균 분당 cs','평균 분당 딜량', '평균 분당 시야점수','KDA', '승률', '총 플레이 횟수']
 
-st.sidebar.title('내전방 스탯 기록 (20240603 21시 업데이트)')
+st.sidebar.title('내전방 스탯 기록 (20240604 21시 업데이트)')
 st.sidebar.markdown("# Team of The Month")
 month_totm = st.sidebar.selectbox('T.O.T.M 월 선택:', months)
 if st.sidebar.button('T.O.T.M 보기'):
